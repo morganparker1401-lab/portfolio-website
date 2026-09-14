@@ -62,10 +62,13 @@
 
   /* Scroll snapping: each screen fills the viewport below the header; oversized
      sections scroll freely and snap to whichever edge you arrive from.
-     Off on phones and for people who prefer reduced motion. */
+     Off on phones and for people who prefer reduced motion.
+     The header offset is applied as scroll-margin-top on each snap stop (see ui.tsx)
+     rather than scroll-padding-top here: Firefox sizes the free-scroll range of an
+     oversized section with the padding subtracted, which lets it rest one header
+     height past the section's bottom edge. scroll-margin is exact in every engine. */
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: var(--header-height);
     scroll-snap-type: y mandatory;
   }
   @media (width < 601px) {

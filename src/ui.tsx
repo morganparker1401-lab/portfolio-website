@@ -6,7 +6,7 @@ export const H2 = 'font-serif text-[clamp(50px,6vw,88px)] leading-[1.02] trackin
 
 /** One viewport-tall snap stop that stacks several blocks (hero + strip, contact + footer). */
 export function Screen({ children }: { children: ReactNode }) {
-  return <div className="flex min-h-fold snap-start snap-always flex-col">{children}</div>
+  return <div className="flex min-h-fold snap-start snap-always scroll-mt-(--header-height) flex-col">{children}</div>
 }
 
 type ScrollSectionProps = ComponentProps<'section'> & {
@@ -19,7 +19,7 @@ export function ScrollSection({ children, className = '', fill = false, ...props
   const reducedMotion = useReducedMotion()
   const sizing = fill ? 'flex-1' : 'min-h-fold snap-start snap-always'
   return (
-    <section {...props} className={`flex flex-col justify-center py-[100px] max-lg:py-[75px] max-sm:py-[60px] ${sizing} ${className}`}>
+    <section {...props} className={`flex scroll-mt-(--header-height) flex-col justify-center py-[100px] max-lg:py-[75px] max-sm:py-[60px] ${sizing} ${className}`}>
       <motion.div
         className="w-full"
         initial={reducedMotion || props.id === 'work' ? false : { opacity: 0 }}

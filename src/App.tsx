@@ -63,7 +63,7 @@ function App() {
                 <TextLink href="#work" icon="↗">Explore my work</TextLink>
               </div>
             </motion.div>
-            <motion.figure className="w-full max-w-[420px] justify-self-end max-sm:max-w-[340px] sm:col-start-1 sm:row-start-1 sm:justify-self-start xl:max-w-[460px]" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+            <motion.figure className="w-full max-w-[420px] justify-self-center max-sm:max-w-[340px] sm:col-start-1 sm:row-start-1 sm:justify-self-start xl:max-w-[460px]" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
               <img className="block aspect-[1913/2750] h-auto w-full rounded-xl object-cover object-top" src={asset('images/morgan-parker-portrait.webp')} width="920" height="1538" alt="Morgan Parker" fetchPriority="high" />
               <figcaption data-fade className="mt-3.5 text-body font-bold tracking-[1.6px] text-muted">MARKETING &amp; CREATIVE COMMUNICATIONS</figcaption>
             </motion.figure>
