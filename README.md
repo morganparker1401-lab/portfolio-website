@@ -1,61 +1,84 @@
 # Morgan Parker — Portfolio
 
-Private review handoff, September 13, 2026. Nothing has been published. This ZIP contains the editable website source and all media, including Morgan’s latest résumé. Please review locally; coordinate with Morgan before publishing.
+Personal portfolio for Morgan Parker, marketing major at the Neeley School of Business, Texas Christian University. A single-page site with brand storytelling, featured work, background, experience, and contact details.
 
-## Start a local review
+Live at [morgan-parker.net](https://morgan-parker.net).
 
-Install Node.js 24, then open a terminal in this extracted folder (the one containing package.json).
+## Stack
 
-If pnpm is not installed:
+- [Vite](https://vite.dev) with React 19 and TypeScript
+- [Tailwind CSS v4](https://tailwindcss.com) for layout and typography, with the site's palette, fonts, and breakpoints defined as theme tokens
+- [Motion](https://motion.dev) for the fade and carousel animations
+- Bodoni Moda, bundled with the site via `@fontsource/bodoni-moda`
+- Hosted on GitHub Pages, deployed by GitHub Actions
 
-```sh
-npm install -g pnpm@11.19.0
-```
+## Getting started
 
-Then:
+Requires Node.js 24 and pnpm 11 (`.nvmrc` and the `packageManager` field pin the versions). A Nix dev shell is included: `nix develop` provides both.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open the local address printed by Vite. The preview runs only while the terminal is running; Ctrl+C stops it. Do not double-click index.html: this source requires the Vite server. Initial dependency installation needs an internet connection. No API keys, Adobe subscription, or backend setup is required.
+Open the local address Vite prints. The site needs the dev server or a build; opening `index.html` directly will not work.
 
-## Review and edit
+## Scripts
 
-- `src/App.tsx`: page content, section order, and the text fade-in behavior.
-- `src/ui.tsx`: shared pieces (`Screen`, `ScrollSection`, `Eyebrow`, `SectionHeading`, `TextLink`).
-- `src/SiteHeader.tsx`: sticky header, inline links on wider screens, menu button below 761px.
-- `src/Project.tsx`: featured-work entry and its media panels.
-- `src/PhoneSlideshow.tsx`: Legal Center Live phone carousel.
-- `src/site.ts`: navigation links and the `asset()` helper for files in `public/`.
-- `src/index.css`: design tokens (colors, fonts, breakpoints) and the global scroll behavior. Layout and typography are Tailwind utility classes in the components.
-- `src/main.tsx`: app entry and locally bundled Bodoni Moda font imports.
-- `public/images/`: portrait, graphics, carousel slides, and video cover images (WebP), plus `og-image.jpg` for link previews.
-- `public/videos/`: three MP4 projects with optimized startup metadata.
-- `public/documents/morgan-parker-resume.pdf`: current résumé download.
-- `index.html`: page title, description, favicon, and social preview tags.
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Start the dev server with hot reload |
+| `pnpm lint` | Run oxlint |
+| `pnpm build` | Type-check and build to `dist/` |
+| `pnpm preview` | Serve the production build locally |
 
-Breakpoints: phone below 601px, tablet 601 to 900px, desktop 901px and up. Scroll snapping is on from 601px up and off for reduced-motion users.
+## Project structure
 
-Page order: Home → Brand Storytelling → Featured Work → About Me → Experience and Skills → Contact.
-
-Featured work order: General Advertising → Legal Center Live → Less Than Two Weeks → Email Header → Tyler Florence.
-
-Stack: Vite, React, TypeScript, Tailwind CSS, Motion, and Bodoni Moda. Fonts are served with the site. Dependencies and their versions are recorded in package.json and pnpm-lock.yaml.
-
-Check desktop and mobile spacing, video controls and sound, carousel navigation, fade animations, contact links, and résumé download.
-
-## Validate the latest changes
-
-```sh
-pnpm lint
-pnpm build
-pnpm preview
+```
+index.html              Title, description, favicon, social preview tags
+src/
+  main.tsx              Entry point and font imports
+  App.tsx               Page content and section order
+  ui.tsx                Shared pieces: Screen, ScrollSection, Eyebrow, SectionHeading, TextLink
+  SiteHeader.tsx        Sticky header; inline links on wide screens, menu button on narrow ones
+  Project.tsx           Featured-work entry and its media panels
+  PhoneSlideshow.tsx    Legal Center Live phone carousel
+  site.ts               Navigation links and the asset() helper for files in public/
+  index.css             Theme tokens and the few global rules (scroll snapping, focus, fade classes)
+public/
+  images/               Portrait, graphics, carousel slides, video covers (WebP), og-image.jpg
+  videos/               Featured-work MP4s
+  documents/            Résumé PDF
+  favicon.svg
+.github/workflows/
+  deploy.yml            Build and deploy to GitHub Pages on push to main
+AGENTS.md               Conventions and checklists for AI coding assistants (CLAUDE.md imports it)
 ```
 
-The build creates `dist/`. `pnpm preview` serves that production build locally; it is not a production web server.
+## How the page works
 
-## Hosting
+- **Sections** are full-height scroll-snap stops. The home screen (hero plus the red strip) and the contact screen (contact plus footer) are grouped so nothing is skipped. Featured work is taller than a screen and scrolls freely inside, snapping to its top or bottom edge. Snapping is off below 601px and for users who prefer reduced motion.
+- **Breakpoints** are the site's own: phone below 601px, tablet 601 to 900px, desktop 901px and up. The header switches to a menu button below 761px.
+- **Text fades in** as it scrolls into view via an IntersectionObserver in `App.tsx`. Headings and paragraphs are picked up automatically; other elements opt in with `data-fade`.
+- **Assets** in `public/` are referenced through `asset()` so the Vite base URL is applied.
 
-The site is a static build deployed by GitHub Actions (`.github/workflows/deploy.yml`) to GitHub Pages on every push to `main`, served at https://morgan-parker.net. The workflow runs `pnpm lint` and `pnpm build` and publishes `dist/`. Keep the source folder to make future changes; pushing to `main` rebuilds and redeploys automatically.
+## Editing content
+
+- Copy and section order: `src/App.tsx`
+- Featured-work entries: the `Project` list in `src/App.tsx`; media files go in `public/videos/` and `public/images/video-covers/`
+- Carousel slides: `public/images/legal-center/` and the captions in `src/PhoneSlideshow.tsx`
+- Résumé: replace `public/documents/morgan-parker-resume.pdf`
+- Colors, fonts, breakpoints: the `@theme` block in `src/index.css`
+- Page title, description, link-preview image: `index.html`
+
+Images are stored as WebP. To convert new ones from the terminal:
+
+```sh
+nix shell nixpkgs#libwebp --command cwebp -q 85 input.png -o output.webp
+```
+
+## Deployment
+
+Every push to `main` runs `.github/workflows/deploy.yml`, which installs dependencies with a frozen lockfile, runs lint and build, and publishes `dist/` to GitHub Pages. The custom domain is configured in the repository's Pages settings, with DNS at Namecheap pointing to GitHub's Pages addresses.
+
+If you add or remove a dependency, use `pnpm add` or `pnpm remove` so `pnpm-lock.yaml` changes with it; otherwise the frozen-lockfile install in CI fails.
