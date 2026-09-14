@@ -23,14 +23,20 @@ Open the local address printed by Vite. The preview runs only while the terminal
 
 ## Review and edit
 
-- `src/App.tsx`: page content, navigation, project order, and section animations.
-- `src/index.css`: styles and responsive layouts. Later rules include the refinements made during design.
+- `src/App.tsx`: page content, section order, and the text fade-in behavior.
+- `src/ui.tsx`: shared pieces (`Screen`, `ScrollSection`, `Eyebrow`, `SectionHeading`, `TextLink`).
+- `src/SiteHeader.tsx`: sticky header, inline links on wider screens, menu button below 761px.
+- `src/Project.tsx`: featured-work entry and its media panels.
 - `src/PhoneSlideshow.tsx`: Legal Center Live phone carousel.
+- `src/site.ts`: navigation links and the `asset()` helper for files in `public/`.
+- `src/index.css`: design tokens (colors, fonts, breakpoints) and the global scroll behavior. Layout and typography are Tailwind utility classes in the components.
 - `src/main.tsx`: app entry and locally bundled Bodoni Moda font imports.
-- `public/images/`: portrait, graphics, carousel slides, and video cover images.
+- `public/images/`: portrait, graphics, carousel slides, and video cover images (WebP), plus `og-image.jpg` for link previews.
 - `public/videos/`: three MP4 projects with optimized startup metadata.
 - `public/documents/morgan-parker-resume.pdf`: current résumé download.
-- `index.html`: page title and description.
+- `index.html`: page title, description, favicon, and social preview tags.
+
+Breakpoints: phone below 601px, tablet 601 to 900px, desktop 901px and up. Scroll snapping is on from 601px up and off for reduced-motion users.
 
 Page order: Home → Brand Storytelling → Featured Work → About Me → Experience and Skills → Contact.
 
@@ -38,7 +44,7 @@ Featured work order: General Advertising → Legal Center Live → Less Than Two
 
 Stack: Vite, React, TypeScript, Tailwind CSS, Motion, and Bodoni Moda. Fonts are served with the site. Dependencies and their versions are recorded in package.json and pnpm-lock.yaml.
 
-Check desktop and mobile spacing, video controls and sound, carousel navigation, fade animations, contact links, and résumé download. Earlier Chromium checks confirmed playback, carousel controls, download, and narrow layouts; later visual adjustments should receive a final review. Automated WebKit testing could not run because its test engine crashed, so Safari still needs manual review.
+Check desktop and mobile spacing, video controls and sound, carousel navigation, fade animations, contact links, and résumé download.
 
 ## Validate the latest changes
 
@@ -50,8 +56,6 @@ pnpm preview
 
 The build creates `dist/`. `pnpm preview` serves that production build locally; it is not a production web server.
 
-## Future hosting (after Morgan approves)
+## Hosting
 
-This is a static site. Host the contents of `dist/` on a static website host. Relative asset paths are configured in vite.config.ts. No publishing or deployment is performed by the commands above. Keep the source folder to make future changes, then rebuild after edits.
-
-The ZIP excludes node_modules, build output, local environment files, and Git history. Please return edited source or a Git branch so future changes can be reconciled with Morgan’s working copy.
+The site is a static build deployed by GitHub Actions (`.github/workflows/deploy.yml`) to GitHub Pages on every push to `main`, served at https://morgan-parker.net. The workflow runs `pnpm lint` and `pnpm build` and publishes `dist/`. Keep the source folder to make future changes; pushing to `main` rebuilds and redeploys automatically.
